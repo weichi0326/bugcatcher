@@ -1,0 +1,25 @@
+{
+  "_comment": "复制为 analysis_config.json。QQ group_whitelist 填数字群号；feishu_push_chat_ids 填飞书 oc_ 群 ID。定时报告每天 23:00 分析当天 00:00 至触发时刻。",
+  "archive_dir": "analysis_reports",
+  "push_use_interactive_card": false,
+  "push_card_header_template": "blue",
+  "qq_game_sentiment": {
+    "enabled": true,
+    "evening_run_at": "23:00",
+    "run_at": "23:00",
+    "group_whitelist": [
+      "123456789"
+    ],
+    "push_to_feishu": true,
+    "feishu_push_chat_ids": [
+      "oc_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    ],
+    "_feishu_push_note": "QQ 舆情报告推送到此处列出的飞书 oc_ 群",
+    "push_to_each_group": false,
+    "max_messages_per_group": 0,
+    "report_retention_days": 7,
+    "transcript_max_bytes_per_batch": 32768,
+    "task_system_prompt": "根据 QQ 群聊记录生成反馈分析报告：筛选真实问题，区分缺陷、体验、建议和疑问；按证据与影响确定优先级；不编造来源、频次或原话。",
+    "merge_batch_system_prompt": "合并同一统计周期的分批摘要：聚合同类、核对重叠、保留证据与统计口径，不添加摘要外事实。"
+  }
+}

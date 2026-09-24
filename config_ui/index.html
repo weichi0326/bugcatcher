@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eef3f8">
+  <title>项目管理 · QQ 机器人</title>
+  <link rel="stylesheet" href="/config-ui/styles.css">
+  <script src="/config-ui/vendor/markdown-it.umd.min.js" defer></script>
+  <script src="/config-ui/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">Q</span><span><strong>QQ 机器人</strong><small>项目管理控制台</small></span></div>
+      <nav class="main-nav" aria-label="主导航">
+        <button type="button" class="nav-item active" data-page="overview"><span class="nav-icon">◫</span>概览</button>
+        <button type="button" class="nav-item" data-page="qq"><span class="nav-icon">◉</span>QQ 管理</button>
+        <button type="button" class="nav-item" data-page="settings"><span class="nav-icon">✎</span>配置</button>
+        <button type="button" class="nav-item" data-page="archives"><span class="nav-icon">▤</span>记录与报告</button>
+        <button type="button" class="nav-item" data-page="operations"><span class="nav-icon">▶</span>运行管理</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="connection-dot" id="connectionDot"></span><span id="connectionText">正在连接</span></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb"><span>管理控制台</span><span class="separator">/</span><strong id="pageCrumb">概览</strong></div>
+        <div class="top-actions"><span id="lastUpdated"></span><button type="button" class="icon-button" id="refreshBtn" title="刷新当前页面" aria-label="刷新当前页面">↻</button></div>
+      </header>
+      <main id="mainContent">
+        <section class="page active" id="page-overview" aria-labelledby="overview-title">
+          <div class="page-head"><div><h1 id="overview-title">概览</h1></div></div>
+          <div id="overviewSetup" class="overview-notice hidden" role="status"></div>
+          <div id="overviewAlert" class="overview-notice hidden" role="status"></div>
+          <section class="panel home-launch-panel" aria-labelledby="homeLaunchTitle">
+            <div class="panel-heading home-launch-heading"><div><h2 id="homeLaunchTitle">服务总控</h2><p id="homeLaunchHint"></p></div><span id="homeLaunchState" class="service-indicator is-off" role="status"><span class="service-indicator-dot"></span>读取状态中</span></div>
+            <div class="home-launch-body">
+              <div class="home-launch-summary"><div><strong>机器人服务</strong><p id="homeLaunchDetail">正在读取运行状态…</p></div><button type="button" class="button button-primary" id="homePrimary" disabled>启动全部</button></div>
+              <div class="home-component-grid">
+                <div class="home-component"><strong>飞书机器人</strong><span id="homeFeishuBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>未运行</span><small id="homeFeishuHint"></small></div>
+                <div class="home-component"><strong>QQ 登录</strong><span id="homeQQBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>未运行</span><small id="homeQQHint"></small></div>
+                <div class="home-component"><strong>QQ 归档接收端</strong><span id="homeArchiveBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>未运行</span><small id="homeArchiveHint"></small></div>
+              </div>
+              <div id="homeQrPanel" class="home-qr-panel hidden" role="status"><img id="homeQrImage" alt="QQ 登录二维码"><div><strong>使用手机 QQ 扫码登录</strong><p id="homeQrError"></p></div></div>
+            </div>
+            <div class="home-launch-footer"><div><button type="button" class="button button-secondary" data-go="operations">查看日志</button><button type="button" class="button button-secondary" data-go="qq">QQ 详情</button></div></div>
+          </section>
+          <section class="panel home-guide" aria-labelledby="homeGuideTitle">
+            <div class="panel-heading"><div><h2 id="homeGuideTitle">快速上手</h2></div></div>
+            <div class="home-guide-grid">
+              <div class="home-guide-step"><span class="home-guide-number">1</span><div><h3>准备环境</h3><p>部署依赖，检查运行条件。</p><button type="button" class="home-guide-link" data-go="operations">打开运行管理 →</button></div></div>
+              <div class="home-guide-step"><span class="home-guide-number">2</span><div><h3>填写配置</h3><p>填写飞书凭据，选择分析模型并保存。</p><button type="button" class="home-guide-link" data-go="settings">打开配置 →</button></div></div>
+              <div class="home-guide-step"><span class="home-guide-number">3</span><div><h3>准备 QQ</h3><p>下载并安装 QQ 与 NapCat。</p><button type="button" class="home-guide-link" data-go="qq">打开 QQ 管理 →</button></div></div>
+              <div class="home-guide-step"><span class="home-guide-number">4</span><div><h3>启动并扫码</h3><p>启动服务后用手机 QQ 扫码。</p><button type="button" class="home-guide-link" id="homeGuideStart">返回服务总控 ↑</button></div></div>
+            </div>
+            <div class="home-guide-foot">飞书开放平台需启用长连接并发布应用。启动后在飞书群发送 <code>/help</code> 验证，聊天和分析结果可在「记录与报告」查看。</div>
+          </section>
+        </section>
+
+        <section class="page" id="page-settings" aria-labelledby="settings-title">
+          <div class="page-head"><div><h1 id="settings-title">配置</h1></div></div>
+          <div class="section-tabs" role="navigation" aria-label="配置页面"><button type="button" class="section-tab active" data-go="settings">常用设置</button><button type="button" class="section-tab" data-go="config">规则文件</button></div>
+          <div id="settingsStatus" class="settings-status" role="status">正在读取配置主表…</div>
+          <form id="settingsForm" class="settings-layout hidden" autocomplete="off">
+            <section class="panel settings-card settings-feishu"><div class="panel-heading"><h2>飞书机器人</h2></div><div class="settings-fields">
+              <label class="settings-field"><span>App ID</span><input id="settingAppId" type="text" spellcheck="false" autocomplete="off"></label>
+              <label class="settings-field"><span>App Secret</span><input id="settingAppSecret" type="text" spellcheck="false" autocomplete="off"></label>
+            </div></section>
+            <section class="panel settings-card settings-model"><div class="panel-heading"><h2>分析模型</h2></div><div class="settings-fields">
+              <label class="settings-field"><span>服务商</span><select id="settingModelProvider"><option value="">正在加载服务商…</option></select></label>
+              <label class="settings-field"><span>API 地址</span><input id="settingModelBaseUrl" type="url" spellcheck="false" autocomplete="off" placeholder="https://api.example.com/v1"></label>
+              <label class="settings-field"><span>API Key</span><input id="settingModelApiKey" type="text" spellcheck="false" autocomplete="off" placeholder="填写当前服务商的 Key"></label>
+              <label class="settings-field"><span>已选分析模型</span><input id="settingModelName" type="text" readonly placeholder="获取模型列表后在下方选择" aria-label="已选分析模型"></label>
+              <div class="model-actions"><button type="button" class="button button-secondary" id="modelListBtn">获取模型列表</button><button type="button" class="button button-secondary" id="modelTestBtn">测试所选模型</button><span id="modelActionStatus" role="status" aria-live="polite"></span></div>
+              <div class="model-results hidden" id="modelResults"><div class="model-results-head"><strong id="modelResultsCount">可用模型</strong><input id="modelSearch" type="search" autocomplete="off" placeholder="筛选模型" aria-label="筛选模型"></div><div id="modelList" class="model-list"></div></div>
+            </div></section>
+            <section class="panel settings-card settings-test-card"><div class="panel-heading"><h2>推送测试</h2></div><div class="settings-fields">
+              <label class="settings-field"><span>目标会话 ID</span><input id="pushTestChatId" type="text" spellcheck="false" autocomplete="off" placeholder="oc_…"></label>
+              <label class="settings-field"><span>测试消息</span><textarea id="pushTestMessage" rows="3" spellcheck="false" placeholder="输入要发送的消息"></textarea></label>
+              <div class="settings-test-actions"><button type="button" class="button button-secondary" id="pushTestBtn">发送测试消息</button><span id="pushTestStatus" role="status"></span></div>
+            </div></section>
+            <section class="panel settings-card settings-whitelist"><div class="panel-heading"><h2>白名单与推送</h2></div><div class="settings-fields">
+              <label class="settings-field"><span>QQ 白名单群聊</span><textarea id="settingGroupWhitelist" rows="4" spellcheck="false" placeholder="每行一个 QQ 数字群号"></textarea></label>
+              <label class="settings-field"><span>飞书推送会话</span><textarea id="settingPushChatIds" rows="4" spellcheck="false" placeholder="每行一个 oc_ 会话 ID"></textarea></label>
+            </div></section>
+          </form>
+          <div class="settings-savebar"><span id="settingsSaveHint" role="status"></span><div class="settings-save-actions"><button type="button" class="button button-secondary" id="settingsReloadBtn">重新读取</button><button type="submit" form="settingsForm" class="button button-primary" id="settingsSaveBtn" disabled>保存并应用配置</button></div></div>
+        </section>
+
+        <section class="page" id="page-operations" aria-labelledby="operations-title">
+          <div class="page-head"><div><h1 id="operations-title">运行管理</h1></div><button type="button" class="button button-secondary" data-go="overview">返回概览</button></div>
+          <div class="operations-status panel" role="status" aria-live="polite">
+            <div><span class="operations-kicker">机器人服务</span><strong id="operationServiceState">正在读取…</strong><small id="operationServiceDetail">等待状态响应</small></div>
+            <div><span class="operations-kicker">最近维护操作</span><strong id="operationJobState">暂无记录</strong><small id="operationJobDetail"></small></div>
+          </div>
+          <div class="operations-grid">
+            <section class="panel operations-card"><div class="panel-heading"><div><h2>准备环境</h2><p>先检测运行条件；缺少依赖时再安装项目依赖。</p></div></div><div class="operations-card-body"><div class="operations-action"><div><strong>环境与连接诊断</strong><small>检查 Python、依赖、配置与本地服务。</small></div><button type="button" class="button button-secondary operation-command" data-operation-job="diagnose" disabled>开始检测</button></div><div class="operations-action"><div><strong>部署 Python 环境</strong><small>创建项目虚拟环境并安装 requirements.txt。</small></div><button type="button" class="button button-secondary operation-command" data-operation-job="deploy" disabled>开始部署</button></div></div></section>
+            <section class="panel operations-card"><div class="panel-heading"><div><h2>高级启动</h2><p>日常启停请到概览。</p></div></div><div class="operations-card-body"><div class="operations-action"><div><strong>仅运行机器人</strong><small>不启动 QQ；会替换当前整合服务。</small><span id="botServiceBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>未运行</span></div><button type="button" class="button button-secondary operation-command" data-operation-start="bot" disabled>仅启动机器人</button></div><div class="operations-action"><div><strong>重新启动全部</strong><small>重新启动机器人与 QQ；先关闭旧实例。</small></div><button type="button" class="button button-secondary operation-command" data-operation-start="integrated" disabled>重新启动全部</button></div></div></section>
+            <section class="panel operations-card operations-connection-card"><div class="panel-heading"><div><h2>QQ 消息连接</h2></div><span id="qqConnectionBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>QQ 未启动</span></div><div class="operations-card-body"><div class="operations-connection-status"><div><span>NapCat 进程</span><strong id="qqProcessState">未运行</strong></div><div><span>本地归档端口</span><strong id="qqBotState">未运行</strong></div></div><p class="operations-connection-help">进程和端口已启动，不代表 QQ 消息已进入归档。</p><div class="operations-action"><div><strong>修复连接配置</strong><small>QQ 已登录但聊天归档没有新消息，或手动修改连接参数后使用；完成后重新启动全部服务。</small></div><button type="button" class="button button-secondary operation-command" data-operation-job="bridge" disabled>重写连接配置</button></div></div></section>
+            <section class="panel operations-log-card"><div class="panel-heading"><div><h2>服务输出</h2><p id="operationServiceLogHint">等待服务日志</p></div></div><pre id="operationServiceLog" class="operations-log" aria-label="机器人服务输出">服务尚未启动。</pre></section>
+            <section class="panel operations-log-card"><div class="panel-heading"><div><h2>维护操作输出</h2><p id="operationLogHint">暂无操作输出</p></div></div><pre id="operationLog" class="operations-log" aria-label="维护操作输出">尚未执行维护操作。</pre></section>
+          </div>
+        </section>
+
+        <section class="page" id="page-qq" aria-labelledby="qq-title">
+          <div class="page-head"><div><h1 id="qq-title">QQ 管理</h1></div></div>
+          <div class="qq-grid">
+            <section class="panel qq-card qq-login-card"><div class="panel-heading"><div><h2>当前账号与扫码</h2></div><span id="qqLoginBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>未启动</span></div><div class="qq-card-body qq-login-body"><div class="qq-account"><div id="qqAvatarFallback" class="qq-avatar-fallback">Q</div><img id="qqAvatar" class="qq-avatar hidden" alt="QQ 头像"><div><strong id="qqNickname">尚未登录</strong><span id="qqAccountId"></span><p id="qqLoginHint" class="qq-help">从概览启动全部后扫码登录。</p></div></div><div id="qqScanPanel" class="qq-scan-panel hidden"><img id="qqQrImage" alt="QQ 登录二维码"><div><strong>使用手机 QQ 扫码</strong></div></div><div id="qqRescanActions" class="qq-actions hidden"><button type="button" class="button button-secondary" id="qqRescanBtn" disabled>重新扫码登录</button></div></div></section>
+            <section class="panel qq-card"><div class="panel-heading"><div><h2>安装与版本</h2><p id="qqInstallHint" class="hidden">若弹出安装窗口，请按提示完成。</p></div></div><div class="qq-card-body"><div class="qq-fact"><span>安装状态</span><span id="qqInstallBadge" class="service-indicator is-off"><span class="service-indicator-dot"></span>检查中…</span></div><div class="qq-fact"><span>QQ 版本</span><strong id="qqVersion">—</strong></div><div class="qq-fact"><span>NapCat 版本</span><strong id="qqReleaseVersion">—</strong></div><div class="qq-actions" id="qqSetupActions"><button type="button" class="button button-primary" id="qqSetupBtn" disabled>下载并安装 QQ</button></div><p id="qqSetupStatus" class="qq-help" role="status" aria-live="polite"></p></div></section>
+          </div>
+        </section>
+
+        <section class="page" id="page-config" aria-labelledby="config-title">
+          <div class="page-head"><div><h1 id="config-title">配置</h1></div></div>
+          <div class="section-tabs" role="navigation" aria-label="配置页面"><button type="button" class="section-tab" data-go="settings">常用设置</button><button type="button" class="section-tab active" data-go="config">规则文件</button></div>
+          <div class="browser-panel config-browser-panel">
+            <aside class="file-rail"><div class="rail-head"><div><h2>Markdown 源文件</h2><p id="configCount">加载中</p></div><button type="button" class="plain-icon" data-refresh-scope="config" aria-label="刷新源文件列表" title="刷新">↻</button></div><div class="search-wrap"><span>⌕</span><input id="configSearch" type="search" placeholder="搜索 Markdown 文件" autocomplete="off" aria-label="搜索源文件"></div><div class="file-list" id="configList"></div></aside>
+            <div class="document-area"><div class="document-empty" id="configEmpty"><div class="empty-icon">⚙</div><h2>选择规则文件</h2></div><div id="configDocument" class="document hidden"><div class="document-toolbar"><div class="document-identity"><span class="document-type" id="configType">Markdown</span><div><h2 id="configFileName"></h2><p id="configFilePath"></p></div></div><div class="toolbar-actions"><div class="segmented hidden" id="editorModes"><button type="button" class="active" data-mode="structured">字段编辑</button><button type="button" data-mode="raw">原文编辑</button></div></div></div><div id="structuredEditor" class="structured-editor"></div><textarea id="rawEditor" class="raw-editor hidden" spellcheck="false" aria-label="Markdown 源文件内容"></textarea></div><div class="config-actionbar"><div class="config-action-meta"><span id="configMeta"></span><span id="dirtyIndicator"></span></div><div class="config-action-buttons"><button type="button" class="button button-secondary" id="saveConfigBtn" disabled>保存文件</button><button type="button" class="button button-primary" id="applyBtn">应用配置</button></div></div></div>
+          </div>
+        </section>
+
+        <section class="page" id="page-archives" aria-labelledby="archives-title">
+          <div class="page-head"><div><h1 id="archives-title">聊天归档</h1></div></div>
+          <div class="section-tabs" role="navigation" aria-label="记录与报告页面"><button type="button" class="section-tab active" data-go="archives">聊天归档</button><button type="button" class="section-tab" data-go="reports">分析报告</button></div>
+          <div class="browser-panel"><aside class="file-rail"><div class="rail-head"><div><h2>归档文件</h2><p id="archivesCount">加载中</p></div><button type="button" class="plain-icon" data-refresh-scope="archives" aria-label="刷新归档列表" title="刷新">↻</button></div><div class="search-wrap"><span>⌕</span><input id="archivesSearch" type="search" placeholder="搜索会话、日期、路径" autocomplete="off" aria-label="搜索归档文件"></div><div class="file-list" id="archivesList"></div></aside><div class="document-area"><div class="document-empty" id="archivesEmpty"><div class="empty-icon">▤</div><h2>选择一份聊天归档</h2></div><div id="archivesDocument" class="document hidden"><div class="document-toolbar"><div class="document-identity"><span class="document-type">聊天</span><div><h2 id="archivesFileName"></h2><p id="archivesFilePath"></p></div></div><div class="toolbar-actions"><span class="muted" id="messageCount"></span><button type="button" class="button button-danger" id="deleteArchiveBtn" disabled>删除此归档</button></div></div><div class="search-wrap content-search"><span>⌕</span><input id="messageSearch" type="search" placeholder="搜索当前归档中的消息或用户" autocomplete="off" aria-label="搜索消息"></div><div class="message-list" id="messageList"></div></div></div></div>
+        </section>
+
+        <section class="page" id="page-reports" aria-labelledby="reports-title">
+          <div class="page-head"><div><h1 id="reports-title">分析报告</h1></div></div>
+          <div class="section-tabs" role="navigation" aria-label="记录与报告页面"><button type="button" class="section-tab" data-go="archives">聊天归档</button><button type="button" class="section-tab active" data-go="reports">分析报告</button></div>
+          <div class="browser-panel">
+            <aside class="file-rail"><div class="rail-head"><div><h2>报告文件</h2><p id="reportsCount">加载中</p></div><button type="button" class="plain-icon" data-refresh-scope="reports" aria-label="刷新报告列表" title="刷新">↻</button></div><div class="search-wrap"><span>⌕</span><input id="reportsSearch" type="search" placeholder="搜索报告名称或日期" autocomplete="off" aria-label="搜索报告"></div><div class="file-list" id="reportsList"></div></aside>
+            <div class="document-area">
+              <div class="document-empty" id="reportsEmpty"><div class="empty-icon">▣</div><h2>选择一份分析报告</h2></div>
+              <div id="reportsDocument" class="document hidden">
+                <div class="document-toolbar report-toolbar">
+                  <div class="document-identity"><span class="document-type">报告</span><div><h2 id="reportsFileName"></h2><p id="reportsFilePath"></p></div></div>
+                  <div class="toolbar-actions"><div class="segmented" id="reportModes" role="group" aria-label="报告阅读方式"><button type="button" class="active" data-report-mode="rendered" aria-pressed="true">排版阅读</button><button type="button" data-report-mode="source" aria-pressed="false">原始 Markdown</button></div><button type="button" class="button button-secondary" id="copyReportBtn">复制原文</button><button type="button" class="button button-danger" id="deleteReportBtn" disabled>删除此报告</button></div>
+                </div>
+                <article id="reportContent" class="markdown-body report-reading" aria-label="排版后的报告内容"></article>
+                <pre id="reportSource" class="report-source hidden" aria-label="原始 Markdown 报告内容"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <div id="toastHost" class="toast-host" role="status" aria-live="polite"></div>
+</body>
+</html>

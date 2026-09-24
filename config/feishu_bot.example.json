@@ -1,0 +1,9 @@
+{
+  "_comment": "飞书机器人应用凭证模板。复制为 feishu_bot.json 后填写。",
+  "app_id": "your_feishu_app_id",
+  "app_secret": "your_feishu_app_secret",
+  "bot_number": "",
+  "verification_token": "",
+  "encrypt_key": "",
+  "event_mode_note": "在 bot_config.json 中设 event_mode 为 websocket 或 http 时使用本文件"
+}

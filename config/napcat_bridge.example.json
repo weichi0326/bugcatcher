@@ -1,0 +1,22 @@
+{
+  "_comment": "机器人与 NapCat 的通用桥接模板。换 QQ 号后运行整合启动或 scripts/link_napcat_bridge.py。",
+  "bot": {
+    "host": "127.0.0.1",
+    "port": 5000,
+    "callback_path": "/onebot",
+    "token": ""
+  },
+  "napcat": {
+    "host": "127.0.0.1",
+    "http_port": 3000,
+    "token": ""
+  },
+  "names": {
+    "http_server": "qinglan-onebot-api",
+    "http_client": "lingri-bot-callback"
+  },
+  "apply_to_all_accounts": true,
+  "preferred_uin": "",
+  "auto_detect_active_uin": true,
+  "sync_bot_config": true
+}

@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+.cursor/
+*.swp
+Thumbs.db
+Desktop.ini
+
+# ========== 禁止上传 GitHub（密钥 / 本地数据 / 运行时配置）==========
+# 说明见 README.md「上传 GitHub」一节
+
+# 配置主表（含 DeepSeek 密钥、飞书 app_secret 等）
+config/配置主表.json
+
+# WebUI 应用配置生成的运行时 JSON
+config/bot_config.json
+config/models.json
+config/feishu_bot.json
+config/analysis_config.json
+config/napcat_integration.json
+config/napcat_bridge.json
+config/napcat_bridge_state.json
+config/startup_texts.json
+config/persona_qq_analysis.json
+config/persona_runtime.json
+config/*.bak
+config/.launcher.lock
+
+# 环境变量
+.env
+.env.*
+!.env.example
+
+# 本地消息留存（QQ 群归档）
+conversation_logs/
+
+# 舆情分析报告
+analysis_reports/
+
+# 运行日志
+log/
+logs/
+*.log
+
+# NapCat OneKey 在 WebUI 按需下载并部署；整个程序包不提交
+napcat/NapCat.Shell.Windows.OneKey/
+napcat/.onekey-staging-*/
+# 兼容旧目录中的本机账号配置
+napcat/**/resources/app/napcat/config/*.json
+napcat/**/resources/app/napcat/cache/
+
+/tmp/
+
+# ========== 允许上传（勿加入上方忽略）==========
+# - config/飞书对话规则.md、config/QQ群聊分析规则.md 等通用规则
+# - config/*.example.json、config/配置主表.example.json、config/prompts/
+# - napcat_setup.py（官方安装器下载逻辑，程序包按需获取）
